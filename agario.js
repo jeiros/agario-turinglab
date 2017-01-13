@@ -4,7 +4,6 @@ var virusLink = 'pics/virus.png';
 var timer = 0;
 var canvasWidth = 500;
 var canvasHeight = 500;
-
 //load background image before game starts
 function preload(){
   bg = loadImage(gridBG);
@@ -22,9 +21,9 @@ function setup() {
     player.overlap(allFood, eatFood);
     //player.overlap(enemy, eatPlayer);
   }
-  player.setCollider('circle', 0, 0, 5);
+  player.setCollider('circle', 0, 0, 15);
   player.scale = 1;
-  player.speed = 2;
+  player.speed = 2 / player.scale;
   
   allFood = new Group();
   for (var i = 0; i < 20; i++) {
@@ -44,6 +43,7 @@ function setup() {
 function eatFood(player1, food) {
   food.remove();
   player1.scale += 0.05;
+  player1.speed = 2 / player1.scale;
   // Spawn a new food sprite on a random location
   newFood(random(canvasWidth), random(canvasHeight));
 }
@@ -72,7 +72,7 @@ function newEnemy(enemyColor) {
   enemy = createSprite(random(canvasWidth), random(canvasHeight), 50, 50);
   enemy.draw = function() {
     fill(enemyColor);
-    ellipse(0, 0, 15, 15);
+    ellipse(0, 0, 30, 30);
     enemy.overlap(allFood, eatFood);
     enemy.overlap(player, eatPlayer);
   }
@@ -91,17 +91,34 @@ function enemyMove() {
     }
     timer++;
   } else {
-    if (player.position.x > enemy.position.x) {
-      enemy.velocity.x = enemy.speed;
-    }
-    if (player.position.x < enemy.position.x) {
-      enemy.velocity.x = -enemy.speed;
-    }
-    if (player.position.y > enemy.position.y) {
-      enemy.velocity.y = enemy.speed;
-    }
-    if (player.position.y < enemy.position.y) {
-      enemy.velocity.y = -enemy.speed;
+    if (player.scale < enemy.scale) {
+      // If enemy is bigger, chase player
+      if (player.position.x > enemy.position.x) {
+        enemy.velocity.x = enemy.speed;
+      }
+      if (player.position.x < enemy.position.x) {
+        enemy.velocity.x = -enemy.speed;
+      }
+      if (player.position.y > enemy.position.y) {
+        enemy.velocity.y = enemy.speed;
+      }
+      if (player.position.y < enemy.position.y) {
+        enemy.velocity.y = -enemy.speed;
+      }
+    } else {
+      // Enemy is smaller so run away
+      if (player.position.x > enemy.position.x) {
+        enemy.velocity.x = -enemy.speed;
+      }
+      if (player.position.x < enemy.position.x) {
+        enemy.velocity.x = enemy.speed;
+      }
+      if (player.position.y > enemy.position.y) {
+        enemy.velocity.y = -enemy.speed;
+      }
+      if (player.position.y < enemy.position.y) {
+        enemy.velocity.y = enemy.speed;
+      }
     }
   }
 }
