@@ -1,9 +1,10 @@
 //link to  BG image
-var gridBG = 'https://s3-eu-west-1.amazonaws.com/turing-resources/web/p5.js/assets/agar.bg.png';
-var virusLink = 'https://s3-eu-west-1.amazonaws.com/turing-uploads/rylWc39AU';
+var gridBG = 'pics/agarbg.png';
+var virusLink = 'pics/virus.png';
 var timer = 0;
-var canvasWidth = 1000;
-var canvasHeight = 1000;
+var canvasWidth = 500;
+var canvasHeight = 500;
+
 //load background image before game starts
 function preload(){
   bg = loadImage(gridBG);
